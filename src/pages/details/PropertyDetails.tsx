@@ -21,6 +21,7 @@ import {
 import LoadingImage from "src/assets/images/loading-image.gif";
 import useFavourite from "src/hooks/useFavourite";
 import { AxiosResponse } from "axios";
+import PropertyMap from "src/components/map/Map";
 
 const PropertyDetails = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -280,6 +281,7 @@ const PropertyDetails = () => {
             </span>
           </div>
         </div>
+        {(data) && <PropertyMap data={data.data} />}
       </div>
       <hr className="w-full m-6 border-1 border-gray-200 mx-auto" />
     </main>
