@@ -1,17 +1,36 @@
 import PropertyType from "src/interfaces/Property";
-import { HeartIcon as Favourited } from "@heroicons/react/24/solid";
-import { HeartIcon as NotFavourited } from "@heroicons/react/24/outline";
+import useFavourite from "src/hooks/useFavourite";
+import { useFetchProperty } from "src/hooks/useFetchProperty";
+import { AxiosResponse } from "axios";
+import { HeartIcon as FavouritedHeartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon as NotFavouritedHeartIcon } from "@heroicons/react/24/outline";
 import Rating from "../rating/Rating";
 import { format } from "date-fns";
 
 export interface MediumCardProps {
   property: PropertyType;
+  favouriteId: string;
 }
 
-const MediumCard = ({ property }: MediumCardProps) => {
+const MediumCard = ({ property, favouriteId }: MediumCardProps) => {
   const formattedStartDate = format(new Date(property.dateFrom), "d");
   const formattedEndDate = format(new Date(property.dateTo), "d MMM");
   const range = `${formattedStartDate} - ${formattedEndDate}`;
+  const onSuccessPropertyLoaded = (data: AxiosResponse) => {};
+  
+  const { data } = useFetchProperty(property._id!, onSuccessPropertyLoaded);
+  const { isFavourite, addFavourites, removeFavourite } = useFavourite();
+  const propertyIsSaved = isFavourite(property._id!);
+
+  const toggleSave = (event: any) => {
+    event.preventDefault();
+    if (propertyIsSaved) {
+      removeFavourite(favouriteId!);
+    } else {
+      addFavourites(data?.data);
+    }
+  };
+  
 
   return (
     <div className="flex flex-col h-flex-col h-[450px] items-center m-2 mt-5 cursor-pointer bg-gray-100 hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-out rounded-b-lg">
@@ -21,16 +40,24 @@ const MediumCard = ({ property }: MediumCardProps) => {
           src={property.heroImg}
           alt={`${property.city} - ${property.country}`}
         />
-        {property.favourited ? (
-          <Favourited
-            className="text-red-600 h-8 absolute top-4 right-6 cursor-pointer hover:scale-110"
-            title="Saved as favourite"
-          />
-        ) : (
-          <NotFavourited
-            className="text-red-600 h-8 absolute top-4 right-6 cursor-pointer hover:scale-110"
-            title="Not saved as favourite"
-          />
+        {propertyIsSaved ? (
+          <div
+          className="text-red-600 absolute top-4 right-6 cursor-pointer"
+          onClick={toggleSave}
+          title="Saved as favourite"
+        >
+          <FavouritedHeartIcon className="h-6" color="red" />
+          <span className="text-sm ml-2"></span>
+        </div>
+      ) : (
+        <div
+          className="text-red-600 absolute top-4 right-6 cursor-pointer"
+          onClick={toggleSave}
+          title="Not saved as favourite"
+        >
+          <NotFavouritedHeartIcon className="h-6" />
+          <span className="text-sm ml-2"></span>
+        </div>
         )}
 
         {/* Property Details */}

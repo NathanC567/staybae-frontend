@@ -20,7 +20,7 @@ const TopPicks = () => {
               to={`/property/${topPickProperty._id}`}
               key={`top-pick-${tpId}`}
             >
-              <MediumCard property={topPickProperty} />
+              <MediumCard property={topPickProperty} favouriteId={topPickProperty._id!}/>
             </Link>
           );
         })}
