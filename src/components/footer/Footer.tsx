@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom';
+
+
 const Footer = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 px-32 py-14 bg-gray-100 text-gray-600 mt-32">
@@ -7,6 +10,9 @@ const Footer = () => {
         <p>News</p>
         <p>Investors</p>
         <p>StayBae Membership</p>
+        <div>
+            <Link to="/about">About Us</Link>
+        </div>
       </div>
       <div className="space-y-4 text-xs text-gray-800">
         <h5 className="font-bold">Support</h5>
